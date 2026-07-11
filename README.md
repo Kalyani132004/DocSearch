@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🔍 DocSearch - Enterprise Document Search Engine
 
 🚀 Lightning Fast Full-Text Search Powered by Apache Lucene
@@ -137,3 +138,7 @@ Java Developer | Spring Boot Developer | Full Stack Developer
 
 Passionate about developing scalable enterprise applications, secure backend systems, and high-performance search solutions.
 
+=======
+# DocSearch
+Enterprise document search engine built with Spring Boot, Apache Lucene, PostgreSQL, JWT Authentication, and a modern responsive UI.
+>>>>>>> 55c18d9bd32d8c4bfa73fa7b0af1c2eec271f0f2
