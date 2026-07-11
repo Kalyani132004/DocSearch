@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — DocSearch</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-blob auth-blob-1"></div>
+  <div class="auth-blob auth-blob-2"></div>
+
+  <div class="auth-card" style="max-width: 440px;">
+    <div class="auth-logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-right-to-bracket"></i>
+      </div>
+      <h2>Welcome Back</h2>
+      <p>Sign in to continue to DocSearch</p>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="username">Username or Email</label>
+        <div class="input-group">
+          <i class="fa-solid fa-user input-icon"></i>
+          <input type="text" id="username" class="form-control" placeholder="Enter your username" autocomplete="username" required autofocus />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label class="form-label" for="password" style="margin:0;">Password</label>
+          <a href="#" style="font-size:.78rem; color:var(--text-gold); font-weight:600;">Forgot password?</a>
+        </div>
+        <div class="input-group" style="margin-top:.45rem;">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" autocomplete="current-password" required />
+          <i class="fa-solid fa-eye input-icon-right" id="togglePwd"></i>
+        </div>
+      </div>
+
+      <label class="form-check" style="margin-bottom: 1.75rem;">
+        <input type="checkbox" id="rememberMe" />
+        <span>Keep me signed in</span>
+      </label>
+
+      <button type="submit" class="btn btn-gold" style="width:100%; padding:.75rem; font-size:1rem;" id="loginBtn">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        <span>Sign In</span>
+      </button>
+    </form>
+
+    <div class="divider" style="margin: 1.75rem 0;">Or continue with</div>
+    
+    <button class="btn btn-secondary" style="width:100%; padding:.65rem; color:var(--text-primary);">
+      <i class="fa-brands fa-google" style="color:#ea4335;"></i>
+      Google
+    </button>
+
+    <div style="text-align:center; font-size:.875rem; color: var(--text-muted); margin-top: 2rem;">
+      Don't have an account?
+      <a href="register.html" style="color: var(--text-gold); font-weight:700; margin-left:.25rem;">Create one now</a>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script type="module">
+    import { auth, showToast } from './js/api.js';
+
+    if (auth.isLoggedIn()) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Toggle password
+    document.getElementById('togglePwd')?.addEventListener('click', function() {
+      const inp = document.getElementById('password');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      this.className = inp.type === 'password'
+        ? 'fa-solid fa-eye input-icon-right'
+        : 'fa-solid fa-eye-slash input-icon-right';
+    });
+
+    // Login form
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+      const btn  = document.getElementById('loginBtn');
+
+      if (!user || !pass) {
+        showToast('Please enter both username and password', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner spinner-sm"></div><span>Signing in...</span>';
+
+      try {
+        await auth.login(user, pass);
+        
+        // Handle redirect if coming from another page
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        
+        showToast('Login successful!', 'success');
+        
+        setTimeout(() => {
+          if (redirect) {
+            window.location.href = redirect;
+          } else {
+            window.location.href = 'dashboard.html';
+          }
+        }, 800);
+      } catch (err) {
+        showToast(err.message || 'Invalid username or password', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i><span>Sign In</span>';
+      }
+    });
+  </script>
+</body>
+</html>

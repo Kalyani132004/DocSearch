@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — DocSearch AI</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ── Role Selector ───────────────────────────────────── */
+    .role-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    .role-card {
+      position: relative;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem .85rem;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .15s;
+      background: var(--surface-2);
+      text-align: center;
+      user-select: none;
+    }
+    .role-card:hover {
+      border-color: var(--primary-end);
+      transform: translateY(-2px);
+    }
+    .role-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .role-card.selected {
+      border-color: var(--primary-end);
+      background: rgba(168,85,247,.1);
+      box-shadow: 0 0 0 3px rgba(168,85,247,.15);
+    }
+    .role-card .rc-icon {
+      font-size: 1.6rem;
+      margin-bottom: .45rem;
+      display: block;
+    }
+    .role-card .rc-title {
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--text-primary);
+      margin-bottom: .2rem;
+    }
+    .role-card .rc-desc {
+      font-size: .72rem;
+      color: var(--text-dim);
+      line-height: 1.35;
+    }
+    .role-card .rc-check {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--primary-end);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      color: #fff;
+    }
+    .role-card.selected .rc-check { display: flex; }
+
+    /* ── Password strength ───────────────────────────────── */
+    .strength-bar { display: flex; gap: 3px; }
+    .strength-seg { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background .25s; }
+    .strength-label { font-size: .72rem; margin-top: .25rem; }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-blob auth-blob-1"></div>
+  <div class="auth-blob auth-blob-2"></div>
+
+  <div class="auth-card" style="max-width: 500px;">
+    <div class="auth-logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+      <h2>Create your account</h2>
+      <p>Choose your role and start searching smarter</p>
+    </div>
+
+    <form id="registerForm" novalidate>
+
+      <!-- ── Role Selection ─────────────────────────────── -->
+      <div class="form-group">
+        <label class="form-label">Account Type</label>
+        <div class="role-selector">
+
+          <label class="role-card selected" id="roleCardUser">
+            <input type="radio" name="role" id="roleUser" value="USER" checked />
+            <div class="rc-check"><i class="fa-solid fa-check"></i></div>
+            <span class="rc-icon">👤</span>
+            <div class="rc-title">Regular User</div>
+            <div class="rc-desc">Search &amp; view documents, bookmark, track history</div>
+          </label>
+
+          <label class="role-card" id="roleCardAdmin">
+            <input type="radio" name="role" id="roleAdmin" value="ADMIN" />
+            <div class="rc-check"><i class="fa-solid fa-check"></i></div>
+            <span class="rc-icon">🛡️</span>
+            <div class="rc-title">Administrator</div>
+            <div class="rc-desc">Manage users, documents, analytics &amp; system settings</div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- ── Full Name ──────────────────────────────────── -->
+      <div class="form-group">
+        <label class="form-label" for="fullName">Full Name</label>
+        <div class="input-group">
+          <i class="fa-solid fa-id-card input-icon"></i>
+          <input type="text" id="fullName" class="form-control" placeholder="e.g. John Doe / Dr. Smith / CEO Name" autocomplete="name" required />
+        </div>
+      </div>
+
+      <!-- ── Username + Email ───────────────────────────── -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <div class="input-group">
+            <i class="fa-solid fa-at input-icon"></i>
+            <input type="text" id="username" class="form-control" placeholder="johndoe" autocomplete="username" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <div class="input-group">
+            <i class="fa-solid fa-envelope input-icon"></i>
+            <input type="email" id="email" class="form-control" placeholder="john@example.com" autocomplete="email" required />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Password ───────────────────────────────────── -->
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-group">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="password" class="form-control" placeholder="Min. 8 characters" autocomplete="new-password" required />
+          <i class="fa-solid fa-eye input-icon-right" id="togglePwd"></i>
+        </div>
+        <div id="strengthWrap" style="display:none; margin-top:.4rem;">
+          <div class="strength-bar">
+            <div class="strength-seg" id="seg1"></div>
+            <div class="strength-seg" id="seg2"></div>
+            <div class="strength-seg" id="seg3"></div>
+            <div class="strength-seg" id="seg4"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+        </div>
+      </div>
+
+      <!-- ── Confirm Password ───────────────────────────── -->
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Confirm Password</label>
+        <div class="input-group">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="confirmPassword" class="form-control" placeholder="Repeat password" autocomplete="new-password" required />
+          <i class="fa-solid fa-eye input-icon-right" id="toggleCPwd"></i>
+        </div>
+        <div class="form-error" id="matchError" style="display:none">Passwords do not match</div>
+      </div>
+
+      <!-- ── Terms ──────────────────────────────────────── -->
+      <label class="form-check" style="margin-bottom: 1.5rem;">
+        <input type="checkbox" id="agreeTerms" required />
+        <span>I agree to the <a href="#" style="color:var(--primary-end)">Terms of Service</a> and <a href="#" style="color:var(--primary-end)">Privacy Policy</a></span>
+      </label>
+
+      <button type="submit" class="btn btn-primary" style="width:100%; padding:.75rem;" id="registerBtn">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Create Account</span>
+      </button>
+    </form>
+
+    <div class="divider" style="margin: 1.5rem 0;"></div>
+
+    <div style="text-align:center; font-size:.875rem; color: var(--text-muted);">
+      Already have an account?
+      <a href="login.html" style="color: var(--primary-end); font-weight:600; margin-left:.25rem;">Sign in</a>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script type="module">
+    import { auth, showToast } from './js/api.js';
+
+    if (auth.isLoggedIn()) window.location.href = 'dashboard.html';
+
+    // ── Role Card Selection ─────────────────────────────────
+    document.querySelectorAll('.role-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        card.querySelector('input[type="radio"]').checked = true;
+      });
+    });
+
+    function getSelectedRole() {
+      return document.querySelector('input[name="role"]:checked')?.value || 'USER';
+    }
+
+    // ── Toggle Passwords ────────────────────────────────────
+    function setupToggle(btnId, inputId) {
+      document.getElementById(btnId)?.addEventListener('click', function() {
+        const inp = document.getElementById(inputId);
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        this.className = inp.type === 'password'
+          ? 'fa-solid fa-eye input-icon-right'
+          : 'fa-solid fa-eye-slash input-icon-right';
+      });
+    }
+    setupToggle('togglePwd', 'password');
+    setupToggle('toggleCPwd', 'confirmPassword');
+
+    // ── Password Strength ───────────────────────────────────
+    const pwdInput     = document.getElementById('password');
+    const strengthWrap = document.getElementById('strengthWrap');
+    const strengthLabel= document.getElementById('strengthLabel');
+    const segs = ['seg1','seg2','seg3','seg4'].map(id => document.getElementById(id));
+    const colors = ['', '#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+
+    pwdInput?.addEventListener('input', () => {
+      const val = pwdInput.value;
+      strengthWrap.style.display = val ? 'block' : 'none';
+      let score = 0;
+      if (val.length >= 8)           score++;
+      if (/[A-Z]/.test(val))         score++;
+      if (/[0-9]/.test(val))         score++;
+      if (/[^A-Za-z0-9]/.test(val))  score++;
+      segs.forEach((s, i) => { s.style.background = i < score ? colors[score] : 'var(--border)'; });
+      strengthLabel.textContent = labels[score] || '';
+      strengthLabel.style.color = colors[score] || 'var(--text-dim)';
+    });
+
+    // ── Confirm Match ───────────────────────────────────────
+    document.getElementById('confirmPassword')?.addEventListener('input', () => {
+      const match = pwdInput.value === document.getElementById('confirmPassword').value;
+      document.getElementById('matchError').style.display = match ? 'none' : 'block';
+    });
+
+    // ── Submit ──────────────────────────────────────────────
+    document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fullName        = document.getElementById('fullName').value.trim();
+      const username        = document.getElementById('username').value.trim();
+      const email           = document.getElementById('email').value.trim();
+      const password        = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const agreed          = document.getElementById('agreeTerms').checked;
+      const role            = getSelectedRole();
+      const btn             = document.getElementById('registerBtn');
+
+      if (!fullName || !username || !email || !password) {
+        showToast('Please fill in all fields', 'error'); return;
+      }
+      if (password !== confirmPassword) {
+        showToast('Passwords do not match', 'error'); return;
+      }
+      if (password.length < 8) {
+        showToast('Password must be at least 8 characters', 'error'); return;
+      }
+      if (!agreed) {
+        showToast('Please accept the terms to continue', 'warning'); return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner spinner-sm"></div><span>Creating account...</span>';
+
+      try {
+        await auth.register(fullName, username, email, password, role);
+        const roleLabel = role === 'ADMIN' ? 'Admin account' : 'Account';
+        showToast(`${roleLabel} created! Redirecting to login...`, 'success');
+        setTimeout(() => window.location.href = 'login.html', 1300);
+      } catch (err) {
+        showToast(err.message || 'Registration failed. Try again.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i><span>Create Account</span>';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — DocSearch</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <button class="navbar-toggler" id="sidebarToggler"><i class="fa-solid fa-bars"></i></button>
+    <a href="dashboard.html" class="navbar-brand">
+      <div class="brand-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+      <span class="brand-text-main">DocSearch</span>
+    </a>
+    <div class="navbar-search">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" id="navSearchInput" placeholder="Search documents..." autocomplete="off" />
+    </div>
+    <div class="navbar-actions">
+      <div class="user-dropdown">
+        <div class="user-avatar-btn" id="userAvatarBtn">
+          <div class="avatar" id="navAvatar">U</div>
+          <span class="user-name-sm" id="navUserName">User</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:.7rem; color:var(--text-dim);"></i>
+        </div>
+        <div class="dropdown-menu-custom" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dh-name" id="ddUserName">User Name</div>
+            <div class="dh-email" id="ddUserEmail">user@example.com</div>
+          </div>
+          <a href="profile.html" class="dropdown-item-custom"><i class="fa-solid fa-user"></i> My Profile</a>
+          <a href="bookmarks.html" class="dropdown-item-custom"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
+          <div class="dropdown-divider-custom"></div>
+          <div class="dropdown-item-custom danger" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Sidebar ────────────────────────────────────────── -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-link-item" data-tooltip="Dashboard">
+        <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-link-text">Dashboard</div>
+      </a>
+      <a href="upload.html" class="nav-link-item" data-tooltip="Upload Document">
+        <div class="nav-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <div class="nav-link-text">Upload Document</div>
+      </a>
+      
+      <div class="nav-section-label" style="margin-top:1rem;">Library</div>
+      <a href="bookmarks.html" class="nav-link-item" data-tooltip="Bookmarks">
+        <div class="nav-icon"><i class="fa-solid fa-bookmark"></i></div>
+        <div class="nav-link-text">Bookmarks</div>
+      </a>
+      <a href="history.html?v=2" class="nav-link-item" data-tooltip="Search History">
+        <div class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="nav-link-text">Search History</div>
+      </a>
+
+      <div class="nav-section-label admin-only" style="display:none; margin-top:1rem;">Administration</div>
+      <a href="admin.html?v=3" class="nav-link-item admin-only" data-tooltip="User Management" style="display:none;">
+        <div class="nav-icon"><i class="fa-solid fa-users-gear"></i></div>
+        <div class="nav-link-text">User Management</div>
+      </a>
+      <a href="analytics.html?v=3" class="nav-link-item admin-only" data-tooltip="Analytics" style="display:none;">
+        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="nav-link-text">Analytics Dashboard</div>
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar" id="sidebarAvatar">U</div>
+        <div class="su-info">
+          <div class="su-name" id="sidebarUserName">User</div>
+          <div class="su-role" id="sidebarUserRole">USER</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ────────────────────────────────────── -->
+  <main class="main-content" id="mainContent">
+    <div class="breadcrumb">
+      <a href="dashboard.html">Home</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Profile</span>
+    </div>
+
+    <div class="page-header">
+      <h2>My Profile</h2>
+      <p>Manage your account settings and preferences.</p>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-lg-4">
+        <div class="card" style="text-align:center;">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="profileAvatarBig">U</div>
+            <h3 style="font-size:1.3rem; margin-bottom:.2rem;" id="profileNameBig">User</h3>
+            <span class="role-badge role-user" id="profileRoleBadge">USER</span>
+            <p style="color:var(--text-dim); font-size:.85rem; margin-top:.5rem;" id="profileEmailBig">user@example.com</p>
+          </div>
+          <div class="card-footer flex-between" style="font-size:.85rem; color:var(--text-muted); background:rgba(0,0,0,.2);">
+            <div><i class="fa-solid fa-cloud-arrow-up"></i> <span id="statUp">0</span></div>
+            <div><i class="fa-solid fa-magnifying-glass"></i> <span id="statSr">0</span></div>
+            <div><i class="fa-solid fa-bookmark"></i> <span id="statBm">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h4><i class="fa-solid fa-user-pen text-indigo" style="margin-right:.5rem;"></i> Edit Profile</h4>
+          </div>
+          <div class="card-body">
+            <form id="profileForm">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" required />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" disabled />
+                    <div class="form-hint">Username cannot be changed.</div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" required />
+                  </div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <button type="submit" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h4><i class="fa-solid fa-lock text-gold" style="margin-right:.5rem;"></i> Change Password</h4>
+          </div>
+          <div class="card-body">
+            <form id="pwdForm">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="form-control" id="curPwd" required />
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newPwd" required />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confPwd" required />
+                  </div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <button type="submit" class="btn btn-gold" id="savePwdBtn">Update Password</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script type="module">
+    import { requireAuth, initSidebar, initNavbar, users, auth, showToast, getInitials } from './js/api.js';
+
+    requireAuth();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initSidebar();
+      initNavbar();
+      loadProfileData();
+      
+      try {
+        const stats = await users.getStats();
+        document.getElementById('statUp').textContent = stats.uploads || 0;
+        document.getElementById('statSr').textContent = stats.searches || 0;
+        document.getElementById('statBm').textContent = stats.bookmarks || 0;
+      } catch {}
+    });
+
+    async function loadProfileData() {
+      try {
+        const data = await users.getMe();
+        
+        // Update form
+        document.getElementById('fullName').value = data.fullName || '';
+        document.getElementById('username').value = data.username || '';
+        document.getElementById('email').value    = data.email || '';
+
+        // Update card
+        document.getElementById('profileNameBig').textContent = data.fullName || data.username;
+        document.getElementById('profileEmailBig').textContent = data.email;
+        document.getElementById('profileAvatarBig').textContent = getInitials(data.fullName || data.username);
+        
+        const badge = document.getElementById('profileRoleBadge');
+        badge.textContent = data.role;
+        badge.className = data.role === 'ADMIN' ? 'role-badge role-admin' : 'role-badge role-user';
+
+        // Update local storage so navbar syncs
+        const curUser = auth.getCurrentUser();
+        localStorage.setItem('user', JSON.stringify({ ...curUser, fullName: data.fullName, email: data.email }));
+        initNavbar();
+        initSidebar();
+
+      } catch (err) {
+        showToast('Failed to load profile data', 'error');
+      }
+    }
+
+    // Update Profile
+    document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('saveProfileBtn');
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner spinner-sm"></div> Saving...';
+
+      try {
+        await users.update({ fullName, email });
+        showToast('Profile updated successfully', 'success');
+        loadProfileData();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Changes';
+      }
+    });
+
+    // Change Password
+    document.getElementById('pwdForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('savePwdBtn');
+      const curPwd = document.getElementById('curPwd').value;
+      const newPwd = document.getElementById('newPwd').value;
+      const confPwd = document.getElementById('confPwd').value;
+
+      if (newPwd !== confPwd) {
+        showToast('New passwords do not match', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner spinner-sm"></div> Updating...';
+
+      try {
+        await users.changePassword(curPwd, newPwd);
+        showToast('Password updated successfully', 'success');
+        document.getElementById('pwdForm').reset();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Update Password';
+      }
+    });
+  </script>
+</body>
+</html>

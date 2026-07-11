@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document Preview — DocSearch</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <button class="navbar-toggler" id="sidebarToggler"><i class="fa-solid fa-bars"></i></button>
+    <a href="dashboard.html" class="navbar-brand">
+      <div class="brand-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+      <span class="brand-text-main">DocSearch</span>
+    </a>
+    <div class="navbar-search">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" id="navSearchInput" placeholder="Search documents..." autocomplete="off" />
+    </div>
+    <div class="navbar-actions">
+      <div class="user-dropdown">
+        <div class="user-avatar-btn" id="userAvatarBtn">
+          <div class="avatar" id="navAvatar">U</div>
+          <span class="user-name-sm" id="navUserName">User</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:.7rem; color:var(--text-dim);"></i>
+        </div>
+        <div class="dropdown-menu-custom" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dh-name" id="ddUserName">User Name</div>
+            <div class="dh-email" id="ddUserEmail">user@example.com</div>
+          </div>
+          <a href="profile.html" class="dropdown-item-custom"><i class="fa-solid fa-user"></i> My Profile</a>
+          <a href="bookmarks.html" class="dropdown-item-custom"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
+          <div class="dropdown-divider-custom"></div>
+          <div class="dropdown-item-custom danger" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Sidebar ────────────────────────────────────────── -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-link-item" data-tooltip="Dashboard">
+        <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-link-text">Dashboard</div>
+      </a>
+      <a href="upload.html" class="nav-link-item" data-tooltip="Upload Document">
+        <div class="nav-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <div class="nav-link-text">Upload Document</div>
+      </a>
+      
+      <div class="nav-section-label" style="margin-top:1rem;">Library</div>
+      <a href="bookmarks.html" class="nav-link-item" data-tooltip="Bookmarks">
+        <div class="nav-icon"><i class="fa-solid fa-bookmark"></i></div>
+        <div class="nav-link-text">Bookmarks</div>
+      </a>
+      <a href="history.html?v=2" class="nav-link-item" data-tooltip="Search History">
+        <div class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="nav-link-text">Search History</div>
+      </a>
+
+      <div class="nav-section-label admin-only" style="display:none; margin-top:1rem;">Administration</div>
+      <a href="admin.html?v=3" class="nav-link-item admin-only" data-tooltip="User Management" style="display:none;">
+        <div class="nav-icon"><i class="fa-solid fa-users-gear"></i></div>
+        <div class="nav-link-text">User Management</div>
+      </a>
+      <a href="analytics.html?v=3" class="nav-link-item admin-only" data-tooltip="Analytics" style="display:none;">
+        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="nav-link-text">Analytics Dashboard</div>
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar" id="sidebarAvatar">U</div>
+        <div class="su-info">
+          <div class="su-name" id="sidebarUserName">User</div>
+          <div class="su-role" id="sidebarUserRole">USER</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ──── -->
+  <main class="main-content" id="mainContent">
+    <div class="breadcrumb">
+      <a href="dashboard.html">Home</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="javascript:history.back()">Back</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Preview</span>
+    </div>
+
+    <div class="page-header flex-between flex-wrap gap-3">
+      <div>
+        <h2 id="docTitle">Loading document...</h2>
+        <div id="docMeta" style="margin-top:.5rem; font-size:.85rem; color:var(--text-dim); display:flex; gap:1rem; flex-wrap:wrap;"></div>
+      </div>
+      <div style="display:flex; gap:.5rem;">
+        <button class="btn btn-secondary btn-icon" id="bookmarkBtn" title="Bookmark">
+          <i class="fa-regular fa-bookmark"></i>
+        </button>
+        <button class="btn btn-gold" id="downloadBtn">
+          <i class="fa-solid fa-download"></i> Download
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="padding:0; background:#fff; border-radius:inherit;" id="previewContainer">
+        <div class="empty-state" style="padding:4rem 2rem;">
+          <div class="spinner spinner-lg"></div>
+          <p style="margin-top:1rem; color:var(--text-dim);">Loading preview...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script type="module">
+    import { requireAuth, initSidebar, initNavbar, documents, bookmarks, showToast, formatSize, formatDate, getFileBadge } from './js/api.js';
+
+    requireAuth();
+
+    let docId = null;
+    let isBookmarked = false;
+    let blobUrl = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initSidebar();
+      initNavbar();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      docId = urlParams.get('id');
+
+      if (!docId) {
+        document.getElementById('docTitle').textContent = 'Document Not Found';
+        document.getElementById('previewContainer').innerHTML = '<div class="empty-state"><p style="color:red">No document ID provided in URL.</p></div>';
+        return;
+      }
+
+      await Promise.all([loadDocInfo(), loadPreview(), checkBookmark()]);
+    });
+
+    async function loadDocInfo() {
+      try {
+        const doc = await documents.getById(docId);
+        document.getElementById('docTitle').innerHTML = `${doc.title || doc.fileName} ${getFileBadge(doc.fileType)}`;
+        document.getElementById('docMeta').innerHTML = `
+          <span><i class="fa-solid fa-user"></i> ${doc.author || 'Unknown'}</span>
+          <span><i class="fa-solid fa-calendar-day"></i> ${formatDate(doc.uploadedAt)}</span>
+          <span><i class="fa-solid fa-hard-drive"></i> ${formatSize(doc.fileSize)}</span>
+        `;
+      } catch (err) {
+        document.getElementById('docTitle').textContent = 'Error loading document info';
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function checkBookmark() {
+      try {
+        isBookmarked = await bookmarks.check(docId);
+        updateBookmarkBtn();
+      } catch {}
+    }
+
+    function updateBookmarkBtn() {
+      const btn = document.getElementById('bookmarkBtn');
+      const icon = btn.querySelector('i');
+      if (isBookmarked) {
+        icon.className = 'fa-solid fa-bookmark';
+        icon.style.color = 'var(--gold-400)';
+      } else {
+        icon.className = 'fa-regular fa-bookmark';
+        icon.style.color = '';
+      }
+    }
+
+    document.getElementById('bookmarkBtn')?.addEventListener('click', async () => {
+      try {
+        isBookmarked = await bookmarks.toggle(docId);
+        updateBookmarkBtn();
+        showToast(isBookmarked ? 'Bookmark added' : 'Bookmark removed', 'success');
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+
+    document.getElementById('downloadBtn')?.addEventListener('click', async () => {
+      try { await documents.download(docId); }
+      catch (err) { showToast('Download failed', 'error'); }
+    });
+
+    async function loadPreview() {
+      const container = document.getElementById('previewContainer');
+      try {
+        const res = await documents.downloadRaw(docId);
+        if (!res.ok) throw new Error('Preview not available');
+
+        const contentType = res.headers.get('content-type') || '';
+        
+        if (contentType.includes('application/pdf')) {
+          const blob = await res.blob();
+          blobUrl = URL.createObjectURL(blob);
+          container.innerHTML = `<iframe src="${blobUrl}" class="preview-frame" style="width:100%; height:80vh; border:none; border-radius:inherit;"></iframe>`;
+        } else if (contentType.includes('text/') || contentType.includes('application/json')) {
+          const text = await res.text();
+          container.style.background = 'var(--bg-surface)';
+          container.style.padding = '1.5rem';
+          container.innerHTML = `<pre class="preview-text" style="background:var(--navy-600); color:var(--text-primary); border-color:var(--border);">${escapeHtml(text)}</pre>`;
+        } else {
+          // Unsupported for direct preview
+          container.style.background = 'var(--bg-surface)';
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fa-solid fa-file-circle-xmark empty-state-icon"></i>
+              <h4>Preview not supported</h4>
+              <p>This file type cannot be previewed in the browser.</p>
+              <button class="btn btn-gold" onclick="window.downloadDoc(${docId})"><i class="fa-solid fa-download"></i> Download File</button>
+            </div>`;
+        }
+      } catch (err) {
+        container.style.background = 'var(--bg-surface)';
+        container.innerHTML = `<div class="empty-state"><p style="color:var(--danger)">Error loading preview: ${err.message}</p></div>`;
+      }
+    }
+
+    function escapeHtml(unsafe) {
+      return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                   .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // Cleanup blob URL when leaving page
+    window.addEventListener('beforeunload', () => {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    });
+  </script>
+</body>
+</html>

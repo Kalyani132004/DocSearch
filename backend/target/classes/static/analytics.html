@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics Dashboard — DocSearch AI</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Chart.js for charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js"></script>
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <button class="navbar-toggler" id="sidebarToggler"><i class="fa-solid fa-bars"></i></button>
+    <a href="dashboard.html" class="navbar-brand">
+      <div class="brand-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+      <span class="brand-text-main">DocSearch AI</span>
+    </a>
+    <div class="navbar-search">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" id="navSearchInput" placeholder="Search documents..." autocomplete="off" />
+    </div>
+    <div class="navbar-actions">
+      <div class="user-dropdown">
+        <div class="user-avatar-btn" id="userAvatarBtn">
+          <div class="avatar" id="navAvatar">U</div>
+          <span class="user-name-sm" id="navUserName">User</span>
+          <i class="fa-solid fa-chevron-down" style="font-size:.7rem; color:var(--text-dim);"></i>
+        </div>
+        <div class="dropdown-menu-custom" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dh-name" id="ddUserName">User Name</div>
+            <div class="dh-email" id="ddUserEmail">user@example.com</div>
+          </div>
+          <a href="profile.html" class="dropdown-item-custom"><i class="fa-solid fa-user"></i> My Profile</a>
+          <a href="bookmarks.html" class="dropdown-item-custom"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
+          <div class="dropdown-divider-custom"></div>
+          <div class="dropdown-item-custom danger" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Sidebar ────────────────────────────────────────── -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-link-item" data-tooltip="Dashboard">
+        <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-link-text">Dashboard</div>
+      </a>
+      <a href="upload.html" class="nav-link-item" data-tooltip="Upload Document">
+        <div class="nav-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <div class="nav-link-text">Upload Document</div>
+      </a>
+      
+      <div class="nav-section-label" style="margin-top:1rem;">Library</div>
+      <a href="bookmarks.html" class="nav-link-item" data-tooltip="Bookmarks">
+        <div class="nav-icon"><i class="fa-solid fa-bookmark"></i></div>
+        <div class="nav-link-text">Bookmarks</div>
+      </a>
+      <a href="history.html?v=2" class="nav-link-item" data-tooltip="Search History">
+        <div class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="nav-link-text">Search History</div>
+      </a>
+
+      <div class="nav-section-label admin-only" style="margin-top:1rem;">Administration</div>
+      <a href="admin.html?v=3" class="nav-link-item admin-only" data-tooltip="User Management">
+        <div class="nav-icon"><i class="fa-solid fa-users-gear"></i></div>
+        <div class="nav-link-text">User Management</div>
+      </a>
+      <a href="analytics.html?v=4" class="nav-link-item active admin-only" data-tooltip="Analytics">
+        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="nav-link-text">Analytics Dashboard</div>
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar" id="sidebarAvatar">U</div>
+        <div class="su-info">
+          <div class="su-name" id="sidebarUserName">User</div>
+          <div class="su-role" id="sidebarUserRole">USER</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ────────────────────────────────────── -->
+  <main class="main-content" id="mainContent">
+    <div class="breadcrumb">
+      <a href="dashboard.html">Home</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>Analytics</span>
+    </div>
+
+    <div class="page-header">
+      <h2>Platform Analytics</h2>
+      <p>System-wide insights into document usage and search patterns.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-3 col-6">
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fa-solid fa-file-lines"></i></div>
+          <div class="stat-info">
+            <div class="stat-value" id="kpiDocs">0</div>
+            <div class="stat-label">Total Documents</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="stat-card">
+          <div class="stat-icon cyan"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <div class="stat-info">
+            <div class="stat-value" id="kpiSearches">0</div>
+            <div class="stat-label">Total Searches</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-info">
+            <div class="stat-value" id="kpiUsers">0</div>
+            <div class="stat-label">Active Users</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="stat-info">
+            <div class="stat-value" id="kpiUploadsToday">0</div>
+            <div class="stat-label">Uploads Today</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-lg-12">
+        <div class="card" style="height: 100%;">
+          <div class="card-header">
+            <h4><i class="fa-solid fa-chart-area text-indigo" style="margin-right:.5rem;"></i> Upload Activity</h4>
+          </div>
+          <div class="card-body">
+            <div style="width: 100%; height: 320px; position: relative;">
+              <canvas id="chartActivity"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Expose data to React context via window object -->
+  <script type="module">
+    import { requireAdmin, initSidebar, initNavbar, analytics, showToast } from './js/api.js';
+
+    requireAdmin();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initSidebar();
+      initNavbar();
+
+      try {
+        const data = await analytics.get();
+        
+        // Update KPIs
+        document.getElementById('kpiDocs').textContent = data.totalDocuments || 0;
+        document.getElementById('kpiSearches').textContent = data.totalSearches || 0;
+        document.getElementById('kpiUsers').textContent = data.totalUsers || 0;
+        document.getElementById('kpiUploadsToday').textContent = data.documentsUploadedToday || 0;
+
+        // Make data available for Recharts
+        window.analyticsData = data;
+        
+        // Dispatch event so React script knows data is ready
+        window.dispatchEvent(new Event('analyticsDataReady'));
+      } catch (err) {
+        showToast('Failed to load analytics: ' + err.message, 'error');
+      }
+    });
+  </script>
+
+  <!-- Chart.js code to render charts -->
+  <script>
+    const COLORS = ['#6366f1', '#d4a017', '#10b981', '#f43f5e', '#38bdf8']; // indigo, gold, green, rose, lightblue
+
+    function renderCharts() {
+      const data = window.analyticsData;
+      if (!data) return;
+
+      // Ensure default font colors for Chart.js match the dark theme
+      Chart.defaults.color = '#8892b0';
+      Chart.defaults.font.family = "'Inter', sans-serif";
+
+      // Render Area Chart (Upload Activity)
+      const activityCanvas = document.getElementById('chartActivity');
+      if (activityCanvas && data.monthlyUploads && data.monthlyUploads.length > 0) {
+        const labels = data.monthlyUploads.map(d => d.month);
+        const counts = data.monthlyUploads.map(d => d.count);
+
+        const ctx = activityCanvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Uploads',
+              data: counts,
+              borderColor: '#818cf8',
+              backgroundColor: gradient,
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: { grid: { display: false }, border: { display: false } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false }, beginAtZero: true }
+            }
+          }
+        });
+      }
+    }
+
+    window.addEventListener('analyticsDataReady', renderCharts);
+    if (window.analyticsData) {
+      renderCharts();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+﻿Technical documentation for the REST API endpoints and data models.
