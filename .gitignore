@@ -1,0 +1,65 @@
+# ==========================
+# Maven
+# ==========================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ==========================
+# Java
+# ==========================
+*.class
+*.jar
+*.war
+*.ear
+
+# ==========================
+# IDE Files
+# ==========================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Logs
+# ==========================
+*.log
+logs/
+
+# ==========================
+# Environment & Secrets
+# ==========================
+.env
+.env.*
+backend/src/main/resources/application.properties
+
+# ==========================
+# Uploads & Generated Data
+# ==========================
+backend/uploads/
+backend/lucene-index/
+
+# ==========================
+# Temporary Files
+# ==========================
+*.tmp
+*.temp
+*.swp
+
+# ==========================
+# Node (if used)
+# ==========================
+node_modules/
+
+# ==========================
+# Package Manager
+# ==========================
+package-lock.json
+yarn.lock
