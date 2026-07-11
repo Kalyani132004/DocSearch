@@ -1,0 +1,31 @@
+# Maven
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# Uploaded files
+backend/uploads/
+
+# Lucene Index
+backend/lucene-index/
+
+# Environment files
+.env
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+
+# Application configuration
+backend/src/main/resources/application.properties
+
+# Generated folders
+backend/target/
+
