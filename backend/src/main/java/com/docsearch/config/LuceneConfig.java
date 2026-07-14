@@ -24,6 +24,17 @@ public class LuceneConfig {
         if (!Files.exists(indexPath)) {
             Files.createDirectories(indexPath);
         }
+        
+        Path lockPath = indexPath.resolve("write.lock");
+        if (Files.exists(lockPath)) {
+            try {
+                Files.delete(lockPath);
+                System.out.println("Removed stale Lucene write.lock file.");
+            } catch (IOException e) {
+                System.err.println("Failed to remove stale write.lock file: " + e.getMessage());
+            }
+        }
+        
         return FSDirectory.open(indexPath);
     }
 
