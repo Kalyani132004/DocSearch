@@ -1,144 +1,152 @@
-<<<<<<< HEAD
-# 🔍 DocSearch - Enterprise Document Search Engine
+# 🔍 DocSearch - High Performance Document Search Engine
 
-🚀 Lightning Fast Full-Text Search Powered by Apache Lucene
+A secure and high-performance document search engine built using Spring Boot, Apache Lucene, PostgreSQL, and JWT Authentication. It allows users to upload, search, preview, bookmark, download, and manage documents with lightning-fast full-text search.
 
-A secure, modern enterprise document search engine for indexing, managing, and searching PDF, DOCX, and TXT files with high-speed full-text search.
+---
 
-📖 Overview
+# 🚀 Features
 
-**DocSearch** is a powerful, modern full-text document search engine designed to manage, index, and search documents efficiently. It supports **PDF, DOCX, and TXT** files while providing lightning-fast search using **Apache Lucene**.
+## 🔐 Authentication & Security
+- JWT Authentication
+- Spring Security
+- Role-Based Access Control (Admin/User)
+- Secure Login & Registration
+- Password Encryption (BCrypt)
 
-The application includes secure authentication, role-based authorization, document management, bookmarks, search history, and an analytics dashboard for administrators.
+## 📄 Document Management
+- Upload PDF, DOCX, and TXT files
+- Preview Documents
+- Download Documents
+- Delete Documents
+- Automatic Lucene Indexing
 
-✨ Features
+## 🔍 Full-Text Search
+- Apache Lucene Search Engine
+- Fast Keyword Search
+- Relevance-Based Ranking
+- Search History
+- Recent Searches
 
-🔐 Authentication & Security
+## ⭐ Bookmarks
+- Add Bookmark
+- Remove Bookmark
+- View Saved Documents
 
-* JWT Authentication
-* Spring Security
-* Role-Based Access Control
-* Admin & User Roles
-* Password Encryption
-* Secure REST APIs
+## 👤 User Dashboard
+- My Documents
+- Search Statistics
+- Bookmark Statistics
+- Recent Searches
 
+## 👨‍💼 Admin Features
+- View All Users
+- Delete Users
+- Delete Admin (Last Admin Protection)
+- Manage Documents
 
-📂 Document Management
+---
 
-* Upload PDF Files
-* Upload DOCX Files
-* Upload TXT Files
-* Download Documents
-* Delete Documents
-* Document Details
-* File Metadata Management
+# 🛠️ Technology Stack
 
-🔎 Full-Text Search
+### Backend
+- Java 24
+- Spring Boot
+- Spring Security
+- JWT Authentication
+- Spring Data JPA
+- Hibernate
+- Apache Lucene
+- Maven
 
-* Apache Lucene Search Engine
-* Keyword Search
-* Fast Search Results
-* High Relevance Scoring
-* Search History
+### Database
+- PostgreSQL
 
-⭐ User Features
+### Frontend
+- HTML5
+- CSS3
+- JavaScript
+- Bootstrap 5
 
-* Bookmark Documents
-* Personal Search History
-* Responsive Dashboard
-* Modern User Interface
+### Tools
+- Git
+- GitHub
+- VS Code
+- Postman
+- pgAdmin
 
-👨‍💼 Admin Features
+---
 
-* Analytics Dashboard
-* Upload Statistics
-* Search Analytics
-* User Management
-* Document Statistics
-* System Monitoring
+# 📂 Database Tables
 
-🚀 Technology Stack
+- users
+- documents
+- bookmarks
+- search_history
 
- Backend
+---
 
-* Java
-* Spring Boot
-* Spring Security
-* JWT Authentication
-* Spring Data JPA
-* Hibernate
-* Apache Lucene
-* Apache PDFBox
-* Apache POI
-* PostgreSQL
-* Maven
+# ⚡ Core Functionalities
 
-Frontend
+- User Authentication
+- Upload Documents
+- Full-Text Search
+- Document Preview
+- Download Documents
+- Bookmark Management
+- Search History
+- User Management
+- Dashboard Statistics
+- Lucene Index Management
 
-* HTML5
-* CSS3
-* JavaScript
-* Chart.js
-* Responsive Design
-* CSS Grid
-* Flexbox
+---
 
-💾 Data Storage
-PostgreSQL
+# 🔒 Security
 
-Stores:
+- JWT Authentication
+- BCrypt Password Encryption
+- Role-Based Authorization
+- Protected REST APIs
 
-* User Accounts
-* Document Metadata
-* Search History
-* Bookmarks
+---
 
-🚀 Getting Started
+# ▶️ Run the Project
 
+## Clone Repository
 
-# Backend
+```bash
+git clone https://github.com/Kalyani132004/DocSearch.git
+```
+
+## Backend
 
 ```bash
 cd backend
-
 mvn clean install
-
 mvn spring-boot:run
 ```
 
-## Frontend
+Open your browser:
 
-Open **frontend/index.html**
+```
+http://localhost:8080
+```
 
-or
-
-Run using **Live Server**.
-
-# 🔐 Security
-
-* JWT Authentication
-* Spring Security
-* Role-Based Authorization
-* Password Encryption
-* Secure APIs
-* Stateless Authentication
+---
 
 
-# 👨‍🏫 Project Explanation
+# 🚀 Future Enhancements
 
-### Objective
+- OCR Support
+- AI-Based Search Suggestions
+- Search Autocomplete
+- Advanced Filters
+- Analytics Dashboard
 
-Build an enterprise document search engine that provides fast, secure, and efficient searching across multiple document formats.
+---
 
-# 👩‍💻 Developer
+# 👩‍💻 Developed By
 
-  Kalyani Sonawane
+**Kalyani Sonawane**
 
-Java Developer | Spring Boot Developer | Full Stack Developer
 
-Passionate about developing scalable enterprise applications, secure backend systems, and high-performance search solutions.
-
-=======
-# DocSearch
-Enterprise document search engine built with Spring Boot, Apache Lucene, PostgreSQL, JWT Authentication, and a modern responsive UI.
->>>>>>> 55c18d9bd32d8c4bfa73fa7b0af1c2eec271f0f2
+⭐ If you found this project useful, consider giving it a **Star** on GitHub.
