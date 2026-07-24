@@ -34,9 +34,15 @@ public class DocumentController {
 
     @GetMapping
     public ResponseEntity<Page<DocumentDTO>> getAllDocuments(
+            Authentication authentication,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<DocumentDTO> documents = documentService.getAllDocuments(page, size);
+
+        String username = authentication.getName();
+
+        Page<DocumentDTO> documents =
+                documentService.getAllDocuments(username, page, size);
+
         return ResponseEntity.ok(documents);
     }
 
@@ -55,7 +61,11 @@ public class DocumentController {
     public ResponseEntity<Map<String, String>> deleteDocument(
             @PathVariable Long id,
             Authentication authentication) {
-        documentService.deleteDocument(id);
+
+        String username = authentication.getName();
+
+        documentService.deleteDocument(id, username);
+
         return ResponseEntity.ok(Map.of("message", "Document deleted successfully"));
     }
 

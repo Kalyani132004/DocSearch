@@ -25,6 +25,10 @@ public interface SearchHistoryRepository extends JpaRepository<SearchHistory, Lo
     @Query(value = "SELECT sh.query, COUNT(sh.id) as cnt FROM search_history sh GROUP BY sh.query ORDER BY cnt DESC LIMIT 10", nativeQuery = true)
     List<Object[]> findTopKeywords();
 
+    @Modifying
+    @Query("DELETE FROM SearchHistory s WHERE s.user.id = :userId")
+    void deleteByUserId(@Param("userId") Long userId);
+
     @Query(value = "SELECT sh.query, COUNT(sh.id) as cnt FROM search_history sh WHERE sh.user_id = :userId GROUP BY sh.query ORDER BY cnt DESC LIMIT 10", nativeQuery = true)
     List<Object[]> findTopKeywordsByUser(@Param("userId") Long userId);
 

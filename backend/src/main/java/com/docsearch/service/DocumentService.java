@@ -1,16 +1,20 @@
 package com.docsearch.service;
 
 import com.docsearch.dto.DocumentDTO;
+import com.docsearch.repository.BookmarkRepository;
+import org.springframework.transaction.annotation.Transactional;
 import com.docsearch.entity.Document;
 import com.docsearch.entity.User;
 import com.docsearch.exception.ResourceNotFoundException;
 import com.docsearch.lucene.LuceneIndexer;
 import com.docsearch.parser.DocumentParser;
+import com.docsearch.repository.BookmarkRepository;
 import com.docsearch.repository.DocumentRepository;
 import com.docsearch.repository.UserRepository;
 import com.docsearch.util.FileUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,17 +42,20 @@ public class DocumentService {
     private final DocumentParser documentParser;
     private final LuceneIndexer luceneIndexer;
     private final FileUtil fileUtil;
+    private final BookmarkRepository bookmarkRepository;
 
     public DocumentService(DocumentRepository documentRepository,
                            UserRepository userRepository,
                            DocumentParser documentParser,
                            LuceneIndexer luceneIndexer,
-                           FileUtil fileUtil) {
+                           FileUtil fileUtil,
+                           BookmarkRepository bookmarkRepository) {
         this.documentRepository = documentRepository;
         this.userRepository = userRepository;
         this.documentParser = documentParser;
         this.luceneIndexer = luceneIndexer;
         this.fileUtil = fileUtil;
+        this.bookmarkRepository = bookmarkRepository;
     }
 
     @jakarta.annotation.PostConstruct
@@ -140,32 +147,81 @@ public class DocumentService {
         return DocumentDTO.fromEntity(saved);
     }
 
-    public Page<DocumentDTO> getAllDocuments(int page, int size) {
+    public Page<DocumentDTO> getAllDocuments(String username, int page, int size) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        System.out.println("=================================");
+        System.out.println("Username : " + user.getUsername());
+        System.out.println("Role     : " + user.getRole());
+        System.out.println("User Id  : " + user.getId());
+        System.out.println("=================================");
+
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by("uploadedAt").descending());
+
+        if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+
+            System.out.println("ADMIN QUERY EXECUTED");
+
+            return documentRepository.findAllByOrderByUploadedAtDesc(pageable)
+                    .map(DocumentDTO::fromEntity);
+        }
+
+        System.out.println("USER QUERY EXECUTED");
+
+        Page<Document> docs =
+                documentRepository.findVisibleDocuments(user.getId(), pageable);
+
+        System.out.println("Documents Found : " + docs.getTotalElements());
+
+        docs.forEach(d -> System.out.println(
+                d.getId() + " -> " +
+                d.getTitle() + " -> " +
+                d.getUploadedBy().getUsername() + " -> " +
+                d.getUploadedBy().getRole()
+        ));
+
+        return docs.map(DocumentDTO::fromEntity);
+    }
+    public Page<DocumentDTO> getDocumentsByUser(String username, int page, int size) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("uploadedAt").descending());
-        return documentRepository.findAll(pageable).map(DocumentDTO::fromEntity);
+        return documentRepository.findByUploadedBy(user, pageable).map(DocumentDTO::fromEntity);
     }
 
     public DocumentDTO getDocumentById(Long id) {
+
         Document doc = documentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Document", "id", id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Document", "id", id));
+
         return DocumentDTO.fromEntity(doc);
     }
 
+
     public void downloadDocument(Long id, HttpServletResponse response) throws IOException {
+
         Document doc = documentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Document", "id", id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Document", "id", id));
 
         Path filePath = Paths.get(doc.getFilePath());
+
         if (!Files.exists(filePath)) {
             throw new ResourceNotFoundException("File", "path", doc.getFilePath());
         }
 
-        // Increment download count
         doc.setDownloadCount(doc.getDownloadCount() + 1);
         documentRepository.save(doc);
 
         response.setContentType(getContentType(doc.getFileType()));
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + doc.getFileName() + "\"");
+        response.setHeader("Content-Disposition",
+                "attachment; filename=\"" + doc.getFileName() + "\"");
+
         response.setContentLengthLong(doc.getFileSize());
 
         try (OutputStream os = response.getOutputStream()) {
@@ -174,34 +230,49 @@ public class DocumentService {
         }
     }
 
-    public void deleteDocument(Long id) {
-        Document doc = documentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Document", "id", id));
 
-        // Delete physical file
+    @Transactional
+    public void deleteDocument(Long id, String username) {
+
+        Document doc = documentRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Document", "id", id));
+
+        // Find current user
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User", "username", username));
+
+     
+        if ("USER".equalsIgnoreCase(currentUser.getRole())) {
+
+            if (!doc.getUploadedBy().getId().equals(currentUser.getId())) {
+                throw new RuntimeException("You are not allowed to delete this document.");
+            }
+        }
+
+  
         try {
             Files.deleteIfExists(Paths.get(doc.getFilePath()));
         } catch (IOException e) {
-            System.err.println("Warning: Could not delete file at " + doc.getFilePath() + ": " + e.getMessage());
+            System.err.println("File delete failed: " + e.getMessage());
         }
 
-        // Remove from Lucene index
+        // Delete from Lucene index
         try {
             luceneIndexer.deleteDocument(id);
         } catch (Exception e) {
-            System.err.println("Warning: Lucene deletion failed for id=" + id + ": " + e.getMessage());
+            System.err.println("Lucene delete failed: " + e.getMessage());
         }
+
+    
+        bookmarkRepository.deleteByDocumentId(id);
+
 
         documentRepository.delete(doc);
     }
 
-    public Page<DocumentDTO> getDocumentsByUser(String username, int page, int size) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("uploadedAt").descending());
-        return documentRepository.findByUploadedBy(user, pageable).map(DocumentDTO::fromEntity);
-    }
 
     private String getContentType(String fileType) {
         if (fileType == null) return "application/octet-stream";

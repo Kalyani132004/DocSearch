@@ -337,7 +337,7 @@ window.downloadDoc = async (id) => {
   }
 };
 
-// ── Init ──────────────────────────────────────────────────────
+// ── Init ────
 (async () => {
   hideLoader();
   await Promise.all([

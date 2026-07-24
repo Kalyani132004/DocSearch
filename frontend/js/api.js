@@ -1,11 +1,11 @@
-/* ============================================================
+/* 
    api.js — Complete API Helper Module (FIXED)
    Document Search Engine Frontend
-   ============================================================ */
+  */
 
 const API_BASE = '/api';
 
-// ── Auth Headers ──────────────────────────────────────────────
+// ── Auth Headers ───
 function getHeaders(isFormData = false) {
   const token = localStorage.getItem('token');
   const headers = {};
@@ -14,7 +14,7 @@ function getHeaders(isFormData = false) {
   return headers;
 }
 
-// ── Generic Fetch Wrapper ─────────────────────────────────────
+// ── Generic Fetch Wrapper ───
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
   const isFormData = options.body instanceof FormData;
@@ -63,7 +63,7 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
-// ── Auth ──────────────────────────────────────────────────────
+// ── Auth ──
 const auth = {
   async register(fullName, username, email, password, role = 'USER') {
     return apiRequest('/auth/register', {
@@ -117,7 +117,7 @@ const auth = {
   },
 };
 
-// ── Documents ─────────────────────────────────────────────────
+// ── Documents ─────
 const documents = {
   async upload(file, onProgress) {
     const formData = new FormData();
@@ -200,9 +200,10 @@ const documents = {
   },
 };
 
-// ── Search ────────────────────────────────────────────────────
+// ── Search ───────
+
 const search = {
-  // FIX: backend expects ?q= not ?query=
+  
   async search(query, page = 0, size = 10, fileType = null, sortBy = 'relevance') {
     let url = `/search?q=${encodeURIComponent(query)}&page=${page}&size=${size}&sortBy=${sortBy}`;
     if (fileType) url += `&fileType=${fileType}`;
@@ -212,7 +213,7 @@ const search = {
     return result;
   },
 
-  // FIX: backend expects ?q= not ?query=
+  
   async getSuggestions(query) {
     if (!query || query.length < 2) return [];
     try {
@@ -223,7 +224,8 @@ const search = {
   },
 };
 
-// ── Bookmarks ─────────────────────────────────────────────────
+// ── Bookmarks ───────
+
 const bookmarks = {
   // FIX: backend uses POST /bookmarks?documentId=X  (not /bookmarks/{id})
   async add(documentId) {
@@ -261,7 +263,8 @@ const bookmarks = {
   },
 };
 
-// ── Search History ────────────────────────────────────────────
+// ── Search History ──────
+
 const history = {
   // Now that backend has POST /history, this will actually save
   async add(query, resultCount = 0) {
@@ -290,7 +293,8 @@ const history = {
   },
 };
 
-// ── Analytics ─────────────────────────────────────────────────
+// ── Analytics ──
+
 const analytics = {
   // Fetches /analytics and normalises field names for the frontend
   async get() {

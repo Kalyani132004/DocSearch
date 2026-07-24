@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,4 +31,13 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     @Modifying
     @Query("DELETE FROM Bookmark b WHERE b.user = :user AND b.document = :document")
     void deleteByUserAndDocument(@Param("user") User user, @Param("document") Document document);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Bookmark b WHERE b.document.id = :documentId")
+    void deleteByDocumentId(@Param("documentId") Long documentId);
+
+    @Modifying
+    @Query("DELETE FROM Bookmark b WHERE b.user.id = :userId")
+    void deleteByUserId(@Param("userId") Long userId);
 }

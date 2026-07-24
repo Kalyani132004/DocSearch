@@ -22,6 +22,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     long countByUploadedAtBetween(LocalDateTime start, LocalDateTime end);
 
     List<Document> findByUploadedAtBetween(LocalDateTime start, LocalDateTime end);
+    List<Document> findByUploadedBy(User user);
 
     long countByFileType(String fileType);
 
@@ -32,4 +33,13 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query("SELECT d.fileType, COUNT(d) FROM Document d GROUP BY d.fileType")
     List<Object[]> countGroupByFileType();
+
+    @Query("""
+        SELECT d
+        FROM Document d
+        WHERE d.uploadedBy.role = 'ADMIN'
+        OR d.uploadedBy.id = :userId
+        ORDER BY d.uploadedAt DESC
+        """)
+        Page<Document> findVisibleDocuments(@Param("userId") Long userId, Pageable pageable);
 }
