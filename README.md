@@ -1,52 +1,62 @@
 # 🔍 DocSearch - High Performance Document Search Engine
 
-A secure and high-performance document search engine built using Spring Boot, Apache Lucene, PostgreSQL, and JWT Authentication. It allows users to upload, search, preview, bookmark, download, and manage documents with lightning-fast full-text search.
+A secure and high-performance document search engine built using Spring Boot, Apache Lucene, PostgreSQL, and JWT Authentication. It enables users to upload, search, preview, bookmark, download, and manage documents with lightning-fast full-text search.
 
 ---
 
-# 🚀 Features
+## 🌐 Live Demo
 
-## 🔐 Authentication & Security
+**Application:**  
+https://docsearch-o6fc.onrender.com
+
+**API Health Check:**  
+https://docsearch-o6fc.onrender.com/actuator/health
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication & Security
 - JWT Authentication
 - Spring Security
 - Role-Based Access Control (Admin/User)
 - Secure Login & Registration
-- Password Encryption (BCrypt)
+- BCrypt Password Encryption
 
-## 📄 Document Management
+### 📄 Document Management
 - Upload PDF, DOCX, and TXT files
 - Preview Documents
 - Download Documents
 - Delete Documents
 - Automatic Lucene Indexing
 
-## 🔍 Full-Text Search
+### 🔍 Full-Text Search
 - Apache Lucene Search Engine
 - Fast Keyword Search
-- Relevance-Based Ranking
+- Relevance-Based Ranking (BM25)
 - Search History
 - Recent Searches
 
-## ⭐ Bookmarks
+### ⭐ Bookmarks
 - Add Bookmark
 - Remove Bookmark
 - View Saved Documents
 
-## 👤 User Dashboard
+### 👤 User Dashboard
 - My Documents
 - Search Statistics
 - Bookmark Statistics
 - Recent Searches
 
-## 👨‍💼 Admin Features
+### 👨‍💼 Admin Features
 - View All Users
 - Delete Users
-- Delete Admin (Last Admin Protection)
+- Last Admin Protection
 - Manage Documents
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
 ### Backend
 - Java 24
@@ -76,7 +86,7 @@ A secure and high-performance document search engine built using Spring Boot, Ap
 
 ---
 
-# 📂 Database Tables
+## 📂 Database Tables
 
 - users
 - documents
@@ -85,7 +95,7 @@ A secure and high-performance document search engine built using Spring Boot, Ap
 
 ---
 
-# ⚡ Core Functionalities
+## ⚡ Core Functionalities
 
 - User Authentication
 - Upload Documents
@@ -100,7 +110,7 @@ A secure and high-performance document search engine built using Spring Boot, Ap
 
 ---
 
-# 🔒 Security
+## 🔒 Security
 
 - JWT Authentication
 - BCrypt Password Encryption
@@ -109,15 +119,15 @@ A secure and high-performance document search engine built using Spring Boot, Ap
 
 ---
 
-# ▶️ Run the Project
+## ▶️ Run the Project
 
-## Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/Kalyani132004/DocSearch.git
 ```
 
-## Backend
+### Backend
 
 ```bash
 cd backend
@@ -133,8 +143,7 @@ http://localhost:8080
 
 ---
 
-
-# 🚀 Future Enhancements
+## 🚀 Future Enhancements
 
 - OCR Support
 - AI-Based Search Suggestions
@@ -144,9 +153,10 @@ http://localhost:8080
 
 ---
 
-# 👩‍💻 Developed By
+## 👩‍💻 Developed By
 
 **Kalyani Sonawane**
 
+---
 
-⭐ If you found this project useful, consider giving it a **Star** on GitHub.
+⭐ If you found this project useful, consider giving it a Star on GitHub.
