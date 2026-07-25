@@ -1,6 +1,5 @@
 /* 
    api.js — Complete API Helper Module (FIXED)
-   Document Search Engine Frontend
   */
 
 const API_BASE = '/api';

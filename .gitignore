@@ -38,7 +38,6 @@ logs/
 # ==========================
 .env
 .env.*
-backend/src/main/resources/application.properties
 
 # ==========================
 # Uploads & Generated Data
